@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Game — العب الآن</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+<header><div><small>GAME</small><h1>العب الآن</h1></div><button id="back">←</button></header>
+
+<section id="lobby" class="screen active">
+<div class="hero"><b>🎮</b><div><h2>جاهز للمواجهة؟</h2><p>أنشئ غرفة أو ادخل غرفة وابدأ تحدي التخمين.</p></div></div>
+<div class="modes">
+<button class="mode primary" id="create"><strong>＋ إنشاء غرفة</strong><small>أنشئ مباراة جديدة</small></button>
+<button class="mode" id="join"><strong>🔑 دخول غرفة</strong><small>استخدم كود الغرفة</small></button>
+</div>
+<div class="head"><div><h3>الغرف المتاحة</h3><p>الغرف العامة الحالية</p></div><span>● مباشر</span></div>
+<div id="rooms"></div>
+</section>
+
+<section id="createScreen" class="screen">
+<div class="card"><h2>🏠 إنشاء غرفة</h2><p>حدد إعدادات المباراة.</p>
+<label>نوع الغرفة</label><div class="tabs"><button class="sel">عامة</button><button>خاصة</button></div>
+<label>اسم الغرفة</label><input id="roomName" placeholder="مثال: تحدي الأبطال">
+<div class="grid"><div><label>الأدوار</label><select id="rounds"><option>3</option><option selected>5</option><option>7</option></select></div><div><label>مهلة الدور</label><select id="limit"><option>45</option><option selected>60</option><option>90</option></select></div></div>
+<label>إعدادات</label><label class="check"><input type="checkbox" checked> الشات</label>
+<label class="check"><input type="checkbox" checked> الأسئلة الجاهزة</label>
+<label class="check"><input type="checkbox" checked> المايك والسماعة</label>
+<button class="main" id="make">إنشاء الغرفة</button><button class="ghost" id="cancelCreate">إلغاء</button>
+</div></section>
+
+<section id="waiting" class="screen"><div class="waiting">
+<small>كود الغرفة</small><div id="code">------</div><button id="copy">نسخ الكود</button>
+<p id="waitStatus">● في انتظار الخصم...</p>
+<div class="players"><div>👤<b>أنت</b></div><b>VS</b><div>❓<b id="oppWait">في الانتظار</b></div></div>
+<button class="main" id="start" disabled>▶ بدء اللعب</button><button class="ghost white" id="leave">مغادرة</button>
+</div></section>
+
+<section id="joinScreen" class="screen"><div class="card"><h2>🔑 دخول غرفة</h2><p>اكتب كود الغرفة.</p>
+<label>الكود</label><input id="joinCode" maxlength="6" class="codeInput" placeholder="A7K2P9">
+<div id="joinError" class="error"></div><button class="main" id="joinBtn">دخول الغرفة</button><button class="ghost" id="cancelJoin">إلغاء</button>
+</div></section>
+
+<section id="game" class="screen game">
+<div class="gameHead"><b>الدور <span id="round">1</span>/<span id="total">5</span></b><strong id="turn">دورك الآن 🎯</strong><b id="timer">60</b></div>
+<div class="half opponent"><div class="playerHead"><div class="person"><div class="avatar mystery" id="oppAvatar">?</div><div><b>Player Two</b><small>🟢 متصل</small></div></div><div><button class="mini on" id="mic">🎙️</button><button class="mini on" id="sound">🔊</button></div></div>
+<p id="oppState">الخصم يفكر... 🤔</p><div id="oppNotice" class="notice hide"></div></div>
+<div class="vsLine">VS</div>
+<div class="half mine"><div class="myRow"><div class="avatar mystery" id="myAvatar">?</div><div class="grow"><label>اختار صورتك السرية</label><div class="row"><input id="choice" placeholder="مثال: بطيخ"><button class="confirm" id="confirm">✓</button></div><small>الصورة لا تظهر للخصم إلا عند الكشف.</small></div></div>
+<div class="tools"><button id="chat">💬<small>الشات</small></button><button id="questions">❓<small>أسئلة</small></button><button id="guess">🎯<small>Guess</small></button></div>
+<div class="guessBox"><label>خمن صورة الخصم</label><div class="row"><input id="guessInput" placeholder="اكتب تخمينك"><button class="confirm" id="sendGuess">✓</button></div><div id="feedback"></div></div></div>
+<div id="toast" class="toast hide"></div>
+
+<div class="modal hide" id="chatModal"><div class="modalCard"><button class="close" data-close="chatModal">×</button><h3>💬 شات الغرفة</h3><div class="messages" id="messages"><div class="msg them">جاهز؟ 😄</div><div class="msg me">جاهز 🔥</div></div><div class="row"><input id="chatInput" placeholder="اكتب رسالة"><button class="confirm" id="sendChat">✓</button></div></div></div>
+
+<div class="modal hide" id="qModal"><div class="modalCard"><button class="close" data-close="qModal">×</button><h3>❓ أسئلة مشهورة</h3><div id="questionList"></div></div></div>
+
+<div class="modal hide" id="answerModal"><div class="modalCard center"><div class="bigQ">❓</div><h3 id="questionText">هل هو شيء يؤكل؟</h3><p>الخصم ينتظر إجابتك.</p><div class="answers"><button data-a="نعم">نعم</button><button data-a="لا">لا</button><button data-a="لا أعرف">لا أعرف</button></div></div></div>
+
+<div class="modal hide" id="result"><div class="modalCard center"><div class="win">🏆</div><h2 id="resultTitle">أنت فزت!</h2><p id="resultText">أحسنت.</p><div class="resultPic" id="resultPic">🍉</div><button class="main" id="next">ابدأ الدور التالي</button><button class="ghost" id="home">العودة للغرف</button></div></div>
+</section>
+</div>
+<script src="game.js"></script>
+</body></html>
